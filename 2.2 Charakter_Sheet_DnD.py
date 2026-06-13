@@ -4,6 +4,27 @@ import random
 
                     #----Menüaufbau----
 
+
+#Eingabefunktionen mit Fehlerbehandlung
+def eingabe_str(text):
+    while True:
+        try:
+            value = input(text)            
+            return value
+        except ValueError:
+            print("\tIch brauche einen Text. Bitte versuche es erneut.\n")
+
+def eingabe_int(text):
+    while True:
+        try:
+            value = int(input(text))
+            return value
+        except ValueError:
+            print("\tIch brauche eine Zahl. Bitte versuche es erneut.\n")
+        if eingabe_int(text) == 0:
+            print("\tNegativzahl nicht erlaubt.\n")
+
+
 def charaktermenue():
     while True:
         print("\t----Charaktermenü----\n\n"
@@ -18,55 +39,72 @@ def charaktermenue():
               "\t9. Other\n"
               "\t10. Testbereich/Debugging\n"
               "\t11. Beenden\n\n")
-        auswahl = input("Welche Option willst du einsehen?(1-11)\n\n:> ")
-        if auswahl == "1":
-            allgemeine_daten()
-        elif auswahl == "2":
-            wuerfel_und_skillchecks()
-        elif auswahl == "3":
-            attributswerte()
-        elif auswahl == "4":
-            skillchecks()
-        elif auswahl == "5":
-            pass
-        elif auswahl == "6":
-            pass
-        elif auswahl == "7":
-            inventar()        
-        elif auswahl == "8":
-            pass        
-        elif auswahl == "9":
-            pass
-        elif auswahl == "10":
-            testbereich()
+        
+        menü = {1 : "Allgemeine Daten",
+                 2 : "Würfel und Skillchecks",
+                 3 : "Attributswerte",
+                 4 : "Skillchecks",
+                 5 : "Kampf",
+                 6 : "Zauberbereich",
+                 7 : "Inventar",
+                 8 : "Skills & Traits",
+                 9 : "Other",
+                 10 : "Testbereich/Debugging",
+                 11 : "Beenden"}
+        auswahl = eingabe_int("Welche Option willst du einsehen?(1-11)\n\n:> ")
+        if auswahl in menü:
+            if auswahl == 1:
+                allgemeine_daten()
+            elif auswahl == 2:
+                wuerfel_und_skillchecks()
+            elif auswahl == 3:
+                attributswerte()
+            elif auswahl == 4:
+                skillchecks()
+            elif auswahl == 5:
+                kampf()
+            elif auswahl == 6:
+                zauberbereich()
+            elif auswahl == 7:
+                inventar()
+            elif auswahl == 8:
+                pass
+            elif auswahl == 9:
+                pass
+            elif auswahl == 10:
+                testbereich()
+                print(f"Du hast '{menü[auswahl]}' gewählt!\n")
+            elif auswahl == 11:
+                print("Programm wird beendet. Auf Wiedersehen!")
+                break
         else:
-            print("Beende Charaktermenü")
-            break
+            print("Ungültige Eingabe. Bitte wähle eine Zahl zwischen 1 und 11.\n")  
+
 
 #----Anzeigen im Menü----
 
-skill_mapping = {"1" : "athletics",
+skill_mapping = {1 : "athletics",
                  
-                "2" : "acrobatics",
-                "3" : "sleight_of_hand", 
-                "4" : "stealth",
+                2 : "acrobatics",
+                3 : "sleight_of_hand", 
+                4 : "stealth",
                 
-                "5" : "arcana",
-                "6" : "history",
-                "7" : "investigation",
-                "8" : "nature",
-                "9" : "religion",
+                5 : "arcana",
+                6 : "history",
+                7 : "investigation",
+                8 : "nature",
+                9 : "religion",
 
-                "10" : "animal_handling",
-                "11" : "insight",
-                "12" : "medicine",
-                "13" : "perception",
-                "14" : "survival",
+                10 : "animal_handling",
+                11 : "insight",
+                12 : "medicine",
+                13 : "perception",
+                14 : "survival",
 
-                "15" : "deception",
-                "16" : "intimidation",
-                "17" : "performance",
-                "18" : "persuasion"}
+                15 : "deception",
+                16 : "intimidation",
+                17 : "performance",
+                18 : "persuasion"}
 
 def attributswerte():
                 #----attributswerte zeigen----
@@ -79,17 +117,17 @@ def attributswerte():
                 #----attributswerte ändern----
         print("\t----Attributswerte ändern----\n\n")
         print("Möchstest du Attributswerte ändern? (j/n)  \n\n")
-        auswahl = input(":> ").lower()
+        auswahl = eingabe_str(":> ").lower()
         if auswahl == "j":
             print("welches Attribut möchtest du ändern? (str, dex, con, int, wis, cha)\n\n: >")
-            attribut = input(":> ").lower()
+            attribut = eingabe_str(":> ").lower()
             if attribut in charakter["attribute"]:
                 print(f"Wie viel Punkte möchtest du {attribut.upper()} hinzufügen? (negativ möglich)\n\n:> ")
-                punkte = int(input(":> "))
+                punkte = eingabe_int(":> ")
                 charakter["attribute"][attribut]["wert"] += punkte
                 print(f"{attribut.upper()} hat sich um {punkte} erhöht! Neuer Wert: {charakter['attribute'][attribut]['wert']}\n\n")
                 print("möchtest du noch ein Attribut ändern? (j/n)\n\n:> ")
-                nochmal = input(":> ").lower()
+                nochmal = eingabe_str(":> ").lower()
                 if nochmal == "j":
                     continue
                 else:                    
@@ -99,6 +137,57 @@ def attributswerte():
             print("zurück zum Hauptmenü")
             break
                             #zurück zum hauptmenü
+
+def inventar():
+
+    while True:
+
+        print("\n---- Geld ----")
+        geld_anzeigen()
+
+        print("\n---- Gegenstände ----\n")
+
+        for gegenstand, info in charakter["inventar"]["items"].items():
+            print(f"{gegenstand.title()}")
+            print(f"Menge: {info['menge']}\n")
+
+        print(
+            "\nWas möchtest du tun?\n"
+            "1. Gegenstand benutzen\n"
+            "2. Gegenstand kaufen\n"
+            "3. Gegenstand verkaufen\n"
+            "4. Gegenstand entfernen\n"
+            "5. Zurück\n"
+        )
+
+        auswahl = eingabe_str(":> ")
+
+        # ------------------
+        # BENUTZEN
+        # ------------------
+        if auswahl == "1":
+           inventar_benutzen()
+
+        # ------------------
+        # KAUFEN
+        # ------------------
+        elif auswahl == "2":
+           inventar_kaufen()
+
+        # ------------------
+        # VERKAUFEN
+        # ------------------
+        elif auswahl == "3":
+            inventar_verkaufen()
+
+        # ------------------
+        # ENTFERNEN
+        # ------------------
+        elif auswahl == "4":
+            inventar_entfernen()
+    else:        
+        print("zurück zum Hauptmenü")
+    return
 
 def skillchecks():
                 #skills aufrufen und checks durchführen
@@ -110,8 +199,8 @@ def skillchecks():
                           f"Modifikator: {get_modifier(skill)}\n")
                 print("\t19. Zurück zum Hauptmenü\n")
                 #----Skillcheck durchführen----
-                skill_nummer = input("Welchen check willst du machen? (1-19)\n\n:> ")
-                if skill_nummer == "19":
+                skill_nummer = eingabe_int("Welchen check willst du machen? (1-19)\n\n:> ")
+                if skill_nummer == 19:
                     print("zurück zum Hauptmenü")
                     break
                 elif skill_nummer in skill_mapping:
@@ -124,7 +213,7 @@ def skillchecks():
                     continue
                 #----noch einen Skillcheck machen?----
                 print("Möchtest du noch einen Skillcheck machen? (j/n)")
-                nochmal = input(":> ").lower()
+                nochmal = eingabe_str(":> ").lower()
                 if nochmal == "j":
                     continue
                 else:
@@ -139,16 +228,16 @@ def wuerfel_und_skillchecks():
               "\t2. Skillcheck\n"
               "\t3. Attribut Saving Throw\n"
               "\t4. Zurück zum Hauptmenü\n\n")
-        auswahl = input("Welche Option willst du einsehen?(1-4)\n\n:> ")
-        if auswahl == "1":
-            anzahl = int(input("Wie viele Würfel? "))
-            seiten = int(input("Wie viele Seiten? "))
-            bonus = int(input("Welcher Bonus? "))
+        auswahl = eingabe_int("Welche Option möchtest du wählen? (1-4)\n\n:> ")
+        if auswahl == 1:
+            anzahl = eingabe_int("Wie viele Würfel? ")
+            seiten = eingabe_int("Wie viele Seiten? ")
+            bonus = eingabe_int("Welcher Bonus? ")
 
             würfelwurf(anzahl, seiten, bonus)
-        elif auswahl == "2":
+        elif auswahl == 2:
             skillchecks()
-        elif auswahl == "3":
+        elif auswahl == 3:
             attribut_saving_throw()
         else:
             print("zurück zum Hauptmenü")
@@ -160,18 +249,17 @@ def allgemeine_daten():
         print(f"{bezeichnung.title()} : {info}\n\n")
     print("\t1. Daten ändern\n")
     print("\t2. Zurück\n")
-    auswahl = input("Wähle Option(1, 2)\n\nAuswahl:> ")
-
+    auswahl = eingabe_str("Was möchtest du tun? (1-2)\n\n:> ")
     if auswahl == "1":
             #daten ändern
-        print("\t----Allgemeine Daten----\n\n")
+        print("\t----Allgemeine Daten ändern----\n\n")
         print("\t1. Subklasse\n")
         print("\t2. Alignment\n")
         print("\t3. Level\n")
         print("\t4. Xp\n")
         print("\t5. Zurück\n")
         print("\t(1-5)\n\n")
-        auswahl = input("Auswahl:> ")
+        auswahl = eingabe_str("Was möchtest du ändern?\nAuswahl:> ")
 
         if auswahl == "1":
             #subklasse ändern
@@ -181,7 +269,7 @@ def allgemeine_daten():
             print("\t2. Schule des Wagemuts\n")
             print("\t3. Zurück\n\n")
 
-            auswahl = input("Wähle\n:> ")
+            auswahl = eingabe_str("Wähle\n:> ")
             if auswahl == "1":
                 charakter["allgemein"]["subklasse"] = "Schule des Wissens"
                 print("Deine Subklasse wurde auf 'Schule des Wissens' geändert!")
@@ -206,34 +294,23 @@ def allgemeine_daten():
             print("\t8. Chaotisch-Neutral\n")
             print("\t9. Chaotisch-Böse\n")
             print("\t0. Zurück\n\n")
-            auswahl = input(":> ")
-            if auswahl == "1":
-                charakter["allgemein"]["alignment"] = "Rechtschaffend-Gut"
-                print("Dein Alignment hat sich auf Rechtschaffend-Gut verändert!")
-            elif auswahl == "2":
-                charakter["allgemein"]["alignment"] = "Rechtschaffend-Neutral"
-                print("Dein Alignment hat sich auf Rechtschaffend-Neutral verändert!")
-            elif auswahl == "3":
-                charakter["allgemein"]["alignment"] = "Rechtschaffend-Böse"
-                print("Dein Alignment hat sich auf Rechtschaffend-Böse verändert!")
-            elif auswahl == "4":
-                charakter["allgemein"]["alignment"] = "Neutral-Gut"
-                print("Dein Alignment hat sich auf Neutral-Gut verändert!")
-            elif auswahl == "5":
-                charakter["allgemein"]["alignment"] = "Neutral"
-                print("Dein Alignment hat sich auf Neutral verändert!")
-            elif auswahl == "6":
-                charakter["allgemein"]["alignment"] = "Neutral-Böse"
-                print("Dein Alignment hat sich auf Neutral-Böse verändert!")
-            elif auswahl == "7":
-                charakter["allgemein"]["alignment"] = "Chaotisch-Gut"
-                print("Dein Alignment hat sich auf Chaotisch-Gut verändert!")
-            elif auswahl == "8":
-                charakter["allgemein"]["alignment"] = "Chaotisch-Neutral"
-                print("Dein Alignment hat sich auf Chaotisch-Neutral verändert!")
-            elif auswahl == "9":
-                charakter["allgemein"]["alignment"] = "Chaotisch-Böse"
-                print("Dein Alignment hat sich auf Chaotisch-Böse verändert!")
+
+            alignments = {
+                "1" : "Rechtschaffend-Gut",
+                "2" : "Rechtschaffend-Neutral",
+                "3" : "Rechtschaffend-Böse",
+                "4" : "Neutral-Gut",
+                "5" : "Neutral",
+                "6" : "Neutral-Böse",
+                "7" : "Chaotisch-Gut",
+                "8" : "Chaotisch-Neutral",
+                "9" : "Chaotisch-Böse"
+            }
+
+            auswahl = eingabe_str(":> ")
+            if auswahl in alignments:
+                charakter["allgemein"]["alignment"] = alignments[auswahl]
+                print(f"Dein Alignment wurde auf '{alignments[auswahl]}' geändert!")
             else:
                 print("kehre zurück zum Hauptmenü")
                 return
@@ -243,7 +320,7 @@ def allgemeine_daten():
             print("\t----Allgemeine Daten----\n\n")
             print("\t----Level----\n")
             print("\tWelches neue Level hat dein Charakter?\n\n")
-            lvl = int(input(":> "))
+            lvl = eingabe_int(":> ")
             if lvl > 1 and lvl < 21:
                 charakter["allgemein"]["level"] = lvl
             else:
@@ -256,7 +333,7 @@ def allgemeine_daten():
             print("\t----Allgemeine Daten----\n\n")
             print("\t----Erfahrung----\n\n")
             print("Um wieviel möchtest du deine Erfahrung erhöhen?")
-            erfahrung = int(input(":> "))
+            erfahrung = eingabe_int(":> ")
             charakter["allgemein"]["xp"] += erfahrung
             return
         
@@ -269,6 +346,11 @@ def allgemeine_daten():
 
 
    #zurück
+
+def muenzwerte():
+    print("\t\t1 Platin = 1000 Kupfer")
+    print("\t\t1 Gold = 100 Kupfer")
+    print("\t\t1 Silber = 10 Kupfer\n\n")
 
 
 
@@ -283,108 +365,114 @@ def zauberbereich():
    #zeige Zauber
    #zeige slots
 
-def inventar():
-
+def inventar_kaufen():
     while True:
+        name = eingabe_str("Was willst du kaufen?" \
+                "Item Name: ").lower()
+        anzahl = eingabe_int("Wie viele Stücke? \nAnzahl: ")
+        muenzwerte()
+        preis = eingabe_int("Preis pro Stück in Kupfer: \nPreis: ")
+        if preis <= 0:
+            print("Ungültiger Preis.")
+            continue
 
-        print("\n---- Geld ----")
-        geld_anzeigen()
+        kosten = preis * anzahl
 
-        print("\n---- Gegenstände ----\n")
+        if charakter["inventar"]["geld"]["copper"] < kosten:
+                    print("Zu wenig Geld.")
+                    continue
 
-        for gegenstand, info in charakter["inventar"].items():
-            if gegenstand == "geld":
-                continue
-            print(f"{gegenstand.title()}")
-            print(f"Anzahl: {info['menge']}\n")
+        geld_ausgeben(kosten)
 
-        print(
-            "\nWas möchtest du tun?\n"
-            "1. Gegenstand benutzen\n"
-            "2. Gegenstand verkaufen\n"
-            "3. Gegenstand entfernen\n"
-            "4. Zurück zum Hauptmenü\n"
-        )
+        items = charakter["inventar"]["items"]
 
-        auswahl = input(":> ")
+        if name in items:
+            items[name]["menge"] += anzahl
+        else:
+            items[name] = {"menge": anzahl}
 
-        # ------------------
-        # Gegenstand benutzen
-        # ------------------
-
-        if auswahl == "1":
-            gegenstand = input("Welchen Gegenstand möchtest du benutzen?\n:> ").lower()
-
-            if gegenstand not in charakter["inventar"]:
-                print("Dieser Gegenstand ist nicht im Inventar.")
-                continue
-
-            if gegenstand == "geld":
-                print("Geld kann nicht benutzt werden.")
-                continue
-            print(f"\nDu benutzt {gegenstand.title()}!")
-
-            info = charakter["inventar"][gegenstand]
-            if "effekt" in info:
-                print(f"\nEffekt:\n{info['effekt']}")
-            else:
-                print("Dieser Gegenstand hat keinen besonderen Effekt.")
-
-        # ------------------
-        # Gegenstand verkaufen
-        # ------------------
-
-        elif auswahl == "2":
-
-            gegenstand = input("Welchen Gegenstand möchtest du verkaufen?\n:> ").lower()
-
-            if gegenstand not in charakter["inventar"]:
-                print("Dieser Gegenstand ist nicht im Inventar.")
-                continue
-
-            if gegenstand == "geld":
-                print("Geld kann nicht verkauft werden.")
-                continue
-
-            preis = int(input("Wie viel Kupfer erhältst du dafür?\n:> "))
-            geld_hinzufügen(preis)
-            charakter["inventar"][gegenstand]["menge"] -= 1
-            if charakter["inventar"][gegenstand]["menge"] <= 0:
-                charakter["inventar"].pop(gegenstand)
-            print(f"{gegenstand.title()} verkauft."
-                  f" Du erhältst {preis} Kupfer.")
-
-        # ------------------
-        # Gegenstand entfernen
-        # ------------------
-
-        elif auswahl == "3":
-
-            gegenstand = input("Welchen Gegenstand möchtest du entfernen?\n:> ").lower()
-
-            if gegenstand not in charakter["inventar"]:
-                print("Dieser Gegenstand ist nicht im Inventar.")
-                continue
-
-            if gegenstand == "geld":
-                print("Geld kann nicht entfernt werden.")
-                continue
-
-            charakter["inventar"][gegenstand]["menge"] -= 1
-            if charakter["inventar"][gegenstand]["menge"] <= 0:
-                charakter["inventar"].pop(gegenstand)
-            print(f"{gegenstand.title()} wurde entfernt.")
-
-        # ------------------
-        # Zurück
-        # ------------------
-
-        elif auswahl == "4":
-            print("Zurück zum Hauptmenü")
+            print(f"{name} gekauft: {anzahl}")
+        
+        nachfrage = eingabe_str("Möchtest du noch etwas kaufen? (j/n)\n\n:> ").lower()
+        if nachfrage == "j":
+            continue
+        else:
+            print("zurück zum Inventar")
             break
 
+def inventar_verkaufen():
+    while True:
+        name = eingabe_str("Welchen Gegenstand willst du verkaufen?: ").lower()
+
+        items = charakter["inventar"]["items"]
+
+        if name not in items:
+            print("Nicht vorhanden.")
+            continue
+            
+        anzahl = eingabe_int("Wie viele willst du verkaufen?: ")
+        if anzahl > items[name]["menge"]:
+            print("Nicht genügend Gegenstände.")
+            continue
+
+        muenzwerte()
+        preis = eingabe_int("Preis pro Stück in Kupfer: \nPreis: ")
+
+        erlös = preis * anzahl
+
+        geld_hinzufügen(erlös)
+
+        items[name]["menge"] -= anzahl
+
+        if items[name]["menge"] <= 0:
+            del items[name]
+        print(f"{name} verkauft: {anzahl}\nErlös: {erlös} Kupfer\n")
+        print(f"Neue Anzahl: {items[name]['menge']}\n")
+        if items[name]["menge"] <= 0:
+            print(f"{name} ist jetzt komplett verkauft und wurde aus dem Inventar entfernt.")
+
+        nachfrage = eingabe_str("\n\nMöchtest du noch etwas verkaufen? (j/n)\n\n:> ").lower()
+        if nachfrage == "j":
+            continue
         else:
-            print("Ungültige Eingabe.")
+            print("zurück zum Inventar")
+            break
+
+def inventar_benutzen():
+    while True:
+        name = eingabe_str("Welchen Gegenstand? willst du benutzen?\n:> ").lower()
+
+        items = charakter["inventar"]["items"]
+
+        if name not in items:
+                print("Nicht im Inventar.")
+                continue
+
+        item = items[name]
+
+        print(f"Du benutzt {name.title()}")
+
+        if "effekt" in item:
+            print(item["effekt"])
+
+
+def inventar_entfernen():
+    while True:
+        name = eingabe_str("Welchen Gegenstand willst du entfernen?: ").lower()
+        items = charakter["inventar"]["items"]
+
+        if name not in items:
+            print("Nicht vorhanden.")
+            continue
+
+        anzahl = eingabe_int("Wie viele willst du entfernen?: ")
+
+        items[name]["menge"] -= anzahl
+
+        if items[name]["menge"] <= 0:
+            del items[name]
+        print(f"{name} entfernt: {anzahl} Stück")
+
 
 def testbereich():
 
@@ -395,44 +483,16 @@ def testbereich():
         print("2. Skillcheck")
         print("3. Zurück")
 
-        auswahl = input(":> ")
+        auswahl = eingabe_str(":> ")
 
         if auswahl == "1":
-            anzahl = int(input("Wie viele Würfel? "))
-            seiten = int(input("Wie viele Seiten? "))
-            bonus = int(input("Welcher Bonus? "))
+            anzahl = eingabe_int("Wie viele Würfel? ")
+            seiten = eingabe_int("Wie viele Seiten? ")
+            bonus = eingabe_int("Welcher Bonus? ")
             würfelwurf(anzahl, seiten, bonus)
 
         elif auswahl == "2":
-
-            while True:
-                #----Skills anzeigen----
-                print("\t----Skills----\n")
-                for nummer, skill in skill_mapping.items():
-                    print(f"\t{nummer} {skill.title()}\n"
-                          f"\tModifikator: {get_modifier(skill)}\n")
-                print("\t19. Zurück zum Hauptmenü\n")
-                #----Skillcheck durchführen----
-                skill_nummer = input("Welchen check willst du machen? (1-19)\n\n:> ")
-                if skill_nummer == "19":
-                    print("zurück zum Hauptmenü")
-                    break
-                elif skill_nummer in skill_mapping:
-                    skill_name = skill_mapping[skill_nummer]
-                    skillcheck(skill_name)
-                    print(f"{skill_name.title()} check durchgeführt!"
-                          f" {get_modifier(skill_name)} Modifikator angewendet.")
-                else:
-                    print("Ungültige Eingabe. Zurück zum Hauptmenü.")
-                    continue
-                #----noch einen Skillcheck machen?----
-                print("Möchtest du noch einen Skillcheck machen? (j/n)")
-                nochmal = input(":> ").lower()
-                if nochmal == "j":
-                    continue
-                else:
-                    print("Zurück zum Hauptmenü")
-                    break
+            skillchecks()
 
         elif auswahl == "3":
             break
@@ -443,10 +503,9 @@ def testbereich():
 
 #----Mechaniken----
 
+
 #Geldsystem: 1 Platin = 10 Gold = 100 Silber = 1000 Kupfer
-
 def geld_anzeigen():
-
     kupfer = charakter["inventar"]["geld"]["copper"]
 
     platin = kupfer // 1000
@@ -477,15 +536,15 @@ def geld_ausgeben(kupfer=0):
 def proficiency_bonus():
       lvl = charakter["allgemein"]["level"]
       if lvl <= 4:
-        proficiency_bonus = +2
+        proficiency_bonus = 2
       elif lvl <= 8:
-        proficiency_bonus = +3
+        proficiency_bonus = 3
       elif lvl <= 12:
-        proficiency_bonus = +4
+        proficiency_bonus = 4
       elif lvl <= 16:
-        proficiency_bonus = +5
+        proficiency_bonus = 5
       else:
-        proficiency_bonus = +6
+        proficiency_bonus = 6
       return proficiency_bonus
 
 #modifikator, würfel, skillcheck, saving throw, passive perception
@@ -504,6 +563,11 @@ def get_modifier(skill_name):
     elif skill["proficient"]:
         mod += proficiency_bonus()
 
+    return mod
+
+def attribut_modifier(attribut):
+    attr = charakter["attribute"][attribut]["wert"]
+    mod = (attr - 10) // 2
     return mod
 
 def würfelwurf(anzahl, seiten, bonus=0):
@@ -531,7 +595,7 @@ def skillcheck(skill_name):
     print("\n\tAdvantage ('A')")
     print("\tDisadvantage ('D')")
     print("\toder normal? ('N')\n")
-    modus = input("Auf was willst du würfeln?\nEntscheidung:> ").lower()
+    modus = eingabe_str("Auf was willst du würfeln?\nEntscheidung:> ").lower()
 
                     #abfertigen modus
 
@@ -560,7 +624,7 @@ def attribut_saving_throw():
 
         print("\t----Attribut Saving Throw----\n")
                 #----Saving Throw Attribute holen----
-        attribut = input(
+        attribut = eingabe_str(
             "Welchen Saving Throw? (str, dex, con, int, wis, cha, 0 für Hauptmenü)\n:> "
         ).lower()
         if attribut == "0":
@@ -571,7 +635,7 @@ def attribut_saving_throw():
 
             wert = charakter["attribute"][attribut]["wert"]
 
-            mod = (wert - 10) // 2
+            mod = attribut_modifier(attribut)
                 #----Proficiency Bonus hinzufügen, falls proficient----
             mod_mit_bonus = mod
 
@@ -591,7 +655,7 @@ def attribut_saving_throw():
 
             print(f"Gesamt: {gesamt}\n")
                 #----noch einen Saving Throw machen?----
-            nochmal = input("Möchtest du noch einen Saving Throw machen? (j/n)\n\n:> ").lower()
+            nochmal = eingabe_str("Möchtest du noch einen Saving Throw machen? (j/n)\n\n:> ").lower()
             if nochmal == "j":
                 continue
 
@@ -736,47 +800,45 @@ charakter = {
 
 #-Inventar-
     "inventar" : {
-        "rapier" : {"menge" : 1,
-                    "schaden" : "1W8 + {dex_mod} stichschaden"},
-        "diplomatenpack" : {"menge" : 1,
-                            "inhalt" : {"Parfüm" : 1, 
-                                        "Truhe" : 1,
-                                        "Schriftrollenbehäler" : 2, 
-                                        "Feine Kleidung" : 1,
-                                        "Tintenfass" : 1,
-                                        "Feder" : 1,
-                                        "Lampe" : 1,
-                                        "Ölflasche" : 1,
-                                        "Blatt Papier" : 1,
-                                        "Siegelwachs" : 1,
-                                        "Seife" : 1}},
+                "items": {
+                    "rapier" : {"menge" : 1,
+                                "schaden" : "1W8 + {dex_mod} stichschaden"},
+                    "diplomatenpack" : {"menge" : 1,
+                                        "inhalt" : 
+                                            {"Parfüm" : 1, 
+                                            "Truhe" : 1,
+                                            "Schriftrollenbehäler" : 2, 
+                                            "Feine Kleidung" : 1,
+                                            "Tintenfass" : 1,
+                                            "Feder" : 1,
+                                            "Lampe" : 1,
+                                            "Ölflasche" : 1,
+                                            "Blatt Papier" : 1,
+                                            "Siegelwachs" : 1,
+                                            "Seife" : 1}},
 
-        "fälscherausrüstung" : {"menge" : 1,
-                                "inhalt" : ["Werkzeug zum Fälschen von Dokumenten\n",
-                                            "Werkzeug zum Fälschen von Siegeln\n",
-                                            "Werkzeug zum Fälschen von Unterschriften\n"]},
-        "verkleidungsausrüstung" : {"menge" : 1,
-                                    "inhalt" : ["Kostüm\n",
-                                                "Perücke\n",
-                                                "Make-up\n"]},
-        "flöte" : {"menge" : 1,
-                   "effekt" : "\tEine einfache Flöte, die du spielen kannst, um \n"
-                              "\tdeine musikalischen Fähigkeiten zu zeigen."},
-        "dolch" : {"menge" : 1,
-                   "schaden" : "1W4 + Stichschaden"},
-        "lederrüstung" : {"menge" : 1,
-                          "rüstungswert" : 11,
-                          "effekt" : "\tEine leichte Lederrüstung"},
-        "geld" : {"copper" : 1_500}
-        },
-
-
-
-
+                    "fälscherausrüstung" : {"menge" : 1,
+                                            "inhalt" : ["Werkzeug zum Fälschen von Dokumenten\n",
+                                                        "Werkzeug zum Fälschen von Siegeln\n",
+                                                        "Werkzeug zum Fälschen von Unterschriften\n"]},
+                    "verkleidungsausrüstung" : {"menge" : 1,
+                                                    "inhalt" : ["Kostüm\n",
+                                                    "Perücke\n",
+                                                    "Make-up\n"]},
+                    "flöte" : {"menge" : 1,
+                                "effekt" : "\tEine einfache Flöte, die du spielen kannst, um \n"
+                                "\tdeine musikalischen Fähigkeiten zu zeigen."},
+                    "dolch" : {"menge" : 1,
+                                "schaden" : "1W4 + Stichschaden"},
+                    "lederrüstung" : {"menge" : 1,
+                                      "rüstungswert" : 11,
+                                      "effekt" : "\tEine leichte Lederrüstung"},},
+        "geld" : {"copper" : 1_500},}
 }
 
-charaktermenue()
 
+if __name__ == "__main__":
+    charaktermenue()
 #-Kampf-
 
 #Max-Hp
