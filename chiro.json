@@ -1,0 +1,204 @@
+{
+    "allgemein": {
+        "name": "chiro",
+        "klasse": "barde",
+        "subklasse": "keine",
+        "hintergrund": "scharlatan",
+        "alignment": "chaotisch neutral",
+        "level": 1,
+        "xp": 0,
+        "rasse": "halbling (leichtfuß)",
+        "grösse": 75
+    },
+    "attribute": {
+        "str": {
+            "wert": 8,
+            "save_proficient": false
+        },
+        "dex": {
+            "wert": 16,
+            "save_proficient": true
+        },
+        "con": {
+            "wert": 13,
+            "save_proficient": false
+        },
+        "int": {
+            "wert": 11,
+            "save_proficient": false
+        },
+        "wis": {
+            "wert": 11,
+            "save_proficient": false
+        },
+        "cha": {
+            "wert": 17,
+            "save_proficient": true
+        }
+    },
+    "skills": {
+        "athletics": {
+            "attribut": "str",
+            "proficient": false,
+            "expertise": false
+        },
+        "acrobatics": {
+            "attribut": "dex",
+            "proficient": false,
+            "expertise": false
+        },
+        "sleight_of_hand": {
+            "attribut": "dex",
+            "proficient": true,
+            "expertise": false
+        },
+        "stealth": {
+            "attribut": "dex",
+            "proficient": false,
+            "expertise": false
+        },
+        "arcana": {
+            "attribut": "int",
+            "proficient": false,
+            "expertise": false
+        },
+        "history": {
+            "attribut": "int",
+            "proficient": false,
+            "expertise": false
+        },
+        "investigation": {
+            "attribut": "int",
+            "proficient": false,
+            "expertise": false
+        },
+        "nature": {
+            "attribut": "int",
+            "proficient": false,
+            "expertise": false
+        },
+        "religion": {
+            "attribut": "int",
+            "proficient": false,
+            "expertise": false
+        },
+        "animal_handling": {
+            "attribut": "wis",
+            "proficient": false,
+            "expertise": false
+        },
+        "insight": {
+            "attribut": "wis",
+            "proficient": false,
+            "expertise": false
+        },
+        "medicine": {
+            "attribut": "wis",
+            "proficient": false,
+            "expertise": false
+        },
+        "perception": {
+            "attribut": "wis",
+            "proficient": true,
+            "expertise": false
+        },
+        "survival": {
+            "attribut": "wis",
+            "proficient": false,
+            "expertise": false
+        },
+        "deception": {
+            "attribut": "cha",
+            "proficient": true,
+            "expertise": false
+        },
+        "intimidation": {
+            "attribut": "cha",
+            "proficient": false,
+            "expertise": false
+        },
+        "performance": {
+            "attribut": "cha",
+            "proficient": true,
+            "expertise": true
+        },
+        "persuasion": {
+            "attribut": "cha",
+            "proficient": true,
+            "expertise": true
+        }
+    },
+    "inventar": {
+        "items": {
+            "rapier": {
+                "menge": 1,
+                "Typ": "Waffe",
+                "schaden": {
+                    "anzahl": 1,
+                    "seiten": 8
+                },
+                "attribut": "dex",
+                "Schadenstyp": "Stich"
+            },
+            "diplomatenpack": {
+                "menge": 1,
+                "Typ": "Container",
+                "inhalt": {
+                    "Parfüm": 1,
+                    "Truhe": 1,
+                    "Schriftrollenbehäler": 2,
+                    "Feine Kleidung": 1,
+                    "Tintenfass": 1,
+                    "Feder": 1,
+                    "Lampe": 1,
+                    "Ölflasche": 1,
+                    "Blatt Papier": 1,
+                    "Siegelwachs": 1,
+                    "Seife": 1
+                }
+            },
+            "fälscherausrüstung": {
+                "menge": 1,
+                "Typ": "Container",
+                "inhalt": {
+                    "Werkzeug zum Fälschen von Dokumenten\n": 1,
+                    "Werkzeug zum Fälschen von Siegeln\n": 1,
+                    "Werkzeug zum Fälschen von Unterschriften\n": 1
+                }
+            },
+            "verkleidungsausrüstung": {
+                "menge": 1,
+                "Typ": "Container",
+                "inhalt": {
+                    "Kostüm\n": 1,
+                    "Perücke\n": 1,
+                    "Make-up\n": 1
+                }
+            },
+            "flöte": {
+                "menge": 1,
+                "Typ": "Instrument",
+                "effekt": "\tEine einfache Flöte, die du spielen kannst, um \n\tdeine musikalischen Fähigkeiten zu zeigen."
+            },
+            "dolch": {
+                "menge": 1,
+                "Typ": "Waffe",
+                "schaden": {
+                    "anzahl": 1,
+                    "seiten": 4
+                },
+                "attribut": "dex",
+                "Schadenstyp": "Stich"
+            },
+            "lederrüstung": {
+                "menge": 1,
+                "Typ": "Rüstung",
+                "rüstungswert": 11,
+                "effekt": "\tEine leichte Lederrüstung"
+            }
+        },
+        "geld": {
+            "copper": 1500
+        }
+    }
+}

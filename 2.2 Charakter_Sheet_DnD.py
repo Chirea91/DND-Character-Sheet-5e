@@ -1,9 +1,20 @@
                     #----importe----
 
+import json
 import random
 
                     #----Menüaufbau----
 
+#Speichern und Laden von Charakteren
+
+def speichern(name):
+    name = charakter["allgemein"]["name"]
+    with open(f"{name}.json", "w", encoding="utf-8") as file:
+        json.dump(charakter, file, indent=4, ensure_ascii=False)
+
+def laden(name):
+    with open(f"{name}.json", "r", encoding="utf-8") as file:
+        return json.load(file)
 
 #Eingabefunktionen mit Fehlerbehandlung
 def eingabe_str(text):
@@ -157,7 +168,8 @@ def inventar():
             "2. Gegenstand kaufen\n"
             "3. Gegenstand verkaufen\n"
             "4. Gegenstand entfernen\n"
-            "5. Zurück\n"
+            "5. Gegenstand hinzufügen\n" \
+            "6. Zurück zum Hauptmenü\n\n"
         )
 
         auswahl = eingabe_str(":> ")
@@ -185,9 +197,15 @@ def inventar():
         # ------------------
         elif auswahl == "4":
             inventar_entfernen()
-    else:        
-        print("zurück zum Hauptmenü")
-    return
+    
+        # ------------------
+        # HINZUFÜGEN
+        # ------------------
+        elif auswahl == "5":
+            inventar_hinzufuegen()
+        else:        
+            print("zurück zum Hauptmenü")
+        return
 
 def skillchecks():
                 #skills aufrufen und checks durchführen
@@ -364,6 +382,17 @@ def zauberbereich():
    #zeige Zauberdaten
    #zeige Zauber
    #zeige slots
+
+def inventar_hinzufuegen():
+    name = eingabe_str("Welchen Gegenstand willst du hinzufügen?: ").lower()
+    anzahl = eingabe_int("Wie viel/e? \nAnzahl: ")
+    items = charakter["inventar"]["items"]
+    if name in items:
+        items[name]["menge"] += anzahl
+    else:
+        items[name] = {"menge": anzahl}
+
+    print(f"{name} hinzugefügt: {anzahl} an der Zahl\n")
 
 def inventar_kaufen():
     while True:
@@ -800,45 +829,67 @@ charakter = {
 
 #-Inventar-
     "inventar" : {
-                "items": {
-                    "rapier" : {"menge" : 1,
-                                "schaden" : "1W8 + {dex_mod} stichschaden"},
-                    "diplomatenpack" : {"menge" : 1,
-                                        "inhalt" : 
-                                            {"Parfüm" : 1, 
-                                            "Truhe" : 1,
-                                            "Schriftrollenbehäler" : 2, 
-                                            "Feine Kleidung" : 1,
-                                            "Tintenfass" : 1,
-                                            "Feder" : 1,
-                                            "Lampe" : 1,
-                                            "Ölflasche" : 1,
-                                            "Blatt Papier" : 1,
-                                            "Siegelwachs" : 1,
-                                            "Seife" : 1}},
+        "items": {
+            "rapier" : {"menge" : 1,
+                        "Typ" : "Waffe",
+                        "schaden" : {"anzahl" : 1, 
+                                     "seiten" : 8},
+                        "attribut" : "dex",
+                        "Schadenstyp" : "Stich",},
+            "diplomatenpack" : {"menge" : 1,
+                                "Typ" : "Container",
+                                "inhalt" : 
+                                    {"Parfüm" : 1, 
+                                    "Truhe" : 1,
+                                    "Schriftrollenbehäler" : 2,   
+                                    "Feine Kleidung" : 1,
+                                    "Tintenfass" : 1,
+                                    "Feder" : 1,
+                                    "Lampe" : 1,
+                                    "Ölflasche" : 1,
+                                    "Blatt Papier" : 1,
+                                    "Siegelwachs" : 1,
+                                    "Seife" : 1}},
 
-                    "fälscherausrüstung" : {"menge" : 1,
-                                            "inhalt" : ["Werkzeug zum Fälschen von Dokumenten\n",
-                                                        "Werkzeug zum Fälschen von Siegeln\n",
-                                                        "Werkzeug zum Fälschen von Unterschriften\n"]},
-                    "verkleidungsausrüstung" : {"menge" : 1,
-                                                    "inhalt" : ["Kostüm\n",
-                                                    "Perücke\n",
-                                                    "Make-up\n"]},
-                    "flöte" : {"menge" : 1,
-                                "effekt" : "\tEine einfache Flöte, die du spielen kannst, um \n"
-                                "\tdeine musikalischen Fähigkeiten zu zeigen."},
-                    "dolch" : {"menge" : 1,
-                                "schaden" : "1W4 + Stichschaden"},
-                    "lederrüstung" : {"menge" : 1,
-                                      "rüstungswert" : 11,
-                                      "effekt" : "\tEine leichte Lederrüstung"},},
+            "fälscherausrüstung" : {"menge" : 1,
+                                    "Typ" : "Container",
+                                    "inhalt" : 
+                                        {"Werkzeug zum Fälschen von Dokumenten\n" : 1,
+                                         "Werkzeug zum Fälschen von Siegeln\n" : 1,
+                                         "Werkzeug zum Fälschen von Unterschriften\n" : 1}},
+            "verkleidungsausrüstung" : {"menge" : 1,
+                                        "Typ" : "Container",
+                                        "inhalt" : 
+                                            {"Kostüm\n" : 1,
+                                             "Perücke\n" : 1,
+                                             "Make-up\n" : 1}},
+            "flöte" :   {"menge" : 1,
+                        "Typ" : "Instrument",
+                        "effekt" : "\tEine einfache Flöte, die du spielen kannst, um \n"
+                        "\tdeine musikalischen Fähigkeiten zu zeigen."},
+            "dolch" :   {"menge" : 1,
+                        "Typ" : "Waffe",
+                        "schaden" : {"anzahl" : 1, 
+                                     "seiten" : 4},
+                        "attribut" : "dex",
+                        "Schadenstyp" : "Stich",},
+            "lederrüstung" : {"menge" : 1,
+                              "Typ" : "Rüstung",
+                              "rüstungswert" : 11,
+                              "effekt" : "\tEine leichte Lederrüstung"},},
         "geld" : {"copper" : 1_500},}
 }
 
 
+
+
 if __name__ == "__main__":
     charaktermenue()
+
+
+speichern(charakter["allgemein"]["name"])
+
+
 #-Kampf-
 
 #Max-Hp
