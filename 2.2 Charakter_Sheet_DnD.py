@@ -831,13 +831,13 @@ charakter = {
     "inventar" : {
         "items": {
             "rapier" : {"menge" : 1,
-                        "Typ" : "Waffe",
+                        "typ" : "Waffe",
                         "schaden" : {"anzahl" : 1, 
                                      "seiten" : 8},
                         "attribut" : "dex",
-                        "Schadenstyp" : "Stich",},
+                        "schadenstyp" : "stich",},
             "diplomatenpack" : {"menge" : 1,
-                                "Typ" : "Container",
+                                "typ" : "container",
                                 "inhalt" : 
                                     {"Parfüm" : 1, 
                                     "Truhe" : 1,
@@ -852,36 +852,36 @@ charakter = {
                                     "Seife" : 1}},
 
             "fälscherausrüstung" : {"menge" : 1,
-                                    "Typ" : "Container",
+                                    "typ" : "container",
                                     "inhalt" : 
                                         {"Werkzeug zum Fälschen von Dokumenten\n" : 1,
                                          "Werkzeug zum Fälschen von Siegeln\n" : 1,
                                          "Werkzeug zum Fälschen von Unterschriften\n" : 1}},
             "verkleidungsausrüstung" : {"menge" : 1,
-                                        "Typ" : "Container",
+                                        "typ" : "container",
                                         "inhalt" : 
                                             {"Kostüm\n" : 1,
                                              "Perücke\n" : 1,
                                              "Make-up\n" : 1}},
             "flöte" :   {"menge" : 1,
-                        "Typ" : "Instrument",
+                        "typ" : "Instrument",
                         "effekt" : "\tEine einfache Flöte, die du spielen kannst, um \n"
                         "\tdeine musikalischen Fähigkeiten zu zeigen."},
             "dolch" :   {"menge" : 1,
-                        "Typ" : "Waffe",
+                        "typ" : "Waffe",
                         "schaden" : {"anzahl" : 1, 
                                      "seiten" : 4},
                         "attribut" : "dex",
-                        "Schadenstyp" : "Stich",},
+                        "schadenstyp" : "stich",},
             "lederrüstung" : {"menge" : 1,
-                              "Typ" : "Rüstung",
+                              "typ" : "rüstung",
                               "rüstungswert" : 11,
                               "effekt" : "\tEine leichte Lederrüstung"},},
         "geld" : {"copper" : 1_500},}
 }
 
 
-
+laden(name=charakter["allgemein"]["name"])
 
 if __name__ == "__main__":
     charaktermenue()
