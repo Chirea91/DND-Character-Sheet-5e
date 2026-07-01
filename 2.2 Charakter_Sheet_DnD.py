@@ -2,18 +2,31 @@
 
 import json
 import random
+from pathlib import Path
 
                     #----Menüaufbau----
 
+print("Programm gestartet. Willkommen zum DnD Charakterbogen!\n\n")
+
 #Speichern und Laden von Charakteren
+BASE_DIR = Path(__file__).parent
 
 def speichern(name):
-    name = charakter["allgemein"]["name"]
-    with open(f"{name}.json", "w", encoding="utf-8") as file:
-        json.dump(charakter, file, indent=4, ensure_ascii=False)
+    datei = BASE_DIR / f"{name}.json"
+
+    with open(datei, "w", encoding="utf-8") as file:
+        json.dump(
+            charakter, 
+            file, 
+            indent=4, 
+            ensure_ascii=False)
 
 def laden(name):
-    with open(f"{name}.json", "r", encoding="utf-8") as file:
+    datei = BASE_DIR / f"{name}.json"
+
+    print(datei)
+
+    with open(datei, "r", encoding="utf-8") as file:
         return json.load(file)
 
 #Eingabefunktionen mit Fehlerbehandlung
@@ -32,8 +45,7 @@ def eingabe_int(text):
             return value
         except ValueError:
             print("\tIch brauche eine Zahl. Bitte versuche es erneut.\n")
-        if eingabe_int(text) == 0:
-            print("\tNegativzahl nicht erlaubt.\n")
+
 
 
 def charaktermenue():
@@ -84,12 +96,12 @@ def charaktermenue():
                 pass
             elif auswahl == 10:
                 testbereich()
-                print(f"Du hast '{menü[auswahl]}' gewählt!\n")
             elif auswahl == 11:
                 print("Programm wird beendet. Auf Wiedersehen!")
                 break
         else:
-            print("Ungültige Eingabe. Bitte wähle eine Zahl zwischen 1 und 11.\n")  
+            print(f"\nDu hast '{menü[auswahl]}' gewählt!\n")
+            print("\nUngültige Eingabe. Bitte wähle eine Zahl zwischen 1 und 11.\n")  
 
 
 #----Anzeigen im Menü----
@@ -141,20 +153,56 @@ def attributswerte():
                 nochmal = eingabe_str(":> ").lower()
                 if nochmal == "j":
                     continue
-                else:                    
-                    print("zurück zum Hauptmenü")
+                else:
+                    speichern(charakter["allgemein"]["name"])                   
+                    print("zurück zum Hauptmenü. Attributswerte wurden gespeichert.\n\n")
                     break
         else:
             print("zurück zum Hauptmenü")
             break
                             #zurück zum hauptmenü
 
+class Geld:
+    def __init__(self, geld):
+        self.geld = geld
+    def muenzwerte(self):
+        print("\t\t1 Platin = 1000 Kupfer")
+        print("\t\t1 Gold = 100 Kupfer")
+        print("\t\t1 Silber = 10 Kupfer\n\n")
+    
+    def anzeigen(self):
+
+        kupfer = self.geld["copper"]
+
+        platin = kupfer // 1000
+        kupfer %= 1000
+
+        gold = kupfer // 100
+        kupfer %= 100
+
+        silber = kupfer // 10
+        kupfer %= 10
+
+        print(f"Platin: {platin}")
+        print(f"Gold: {gold}")
+        print(f"Silber: {silber}")
+        print(f"Kupfer: {kupfer}")
+
+    def hinzufügen(self, kupfer=0):
+        self.geld["copper"] += kupfer
+
+    def ausgeben(self, kupfer=0):
+        if self.geld["copper"] >= kupfer:
+            self.geld["copper"] -= kupfer
+        else:
+            print("Du hast nicht genug Geld!")
+
 def inventar():
 
     while True:
 
         print("\n---- Geld ----")
-        geld_anzeigen()
+        geld.anzeigen()
 
         print("\n---- Gegenstände ----\n")
 
@@ -365,7 +413,7 @@ def allgemeine_daten():
 
    #zurück
 
-def muenzwerte():
+
     print("\t\t1 Platin = 1000 Kupfer")
     print("\t\t1 Gold = 100 Kupfer")
     print("\t\t1 Silber = 10 Kupfer\n\n")
@@ -399,7 +447,7 @@ def inventar_kaufen():
         name = eingabe_str("Was willst du kaufen?" \
                 "Item Name: ").lower()
         anzahl = eingabe_int("Wie viele Stücke? \nAnzahl: ")
-        muenzwerte()
+        geld.muenzwerte()
         preis = eingabe_int("Preis pro Stück in Kupfer: \nPreis: ")
         if preis <= 0:
             print("Ungültiger Preis.")
@@ -411,7 +459,7 @@ def inventar_kaufen():
                     print("Zu wenig Geld.")
                     continue
 
-        geld_ausgeben(kosten)
+        geld.ausgeben(kosten)
 
         items = charakter["inventar"]["items"]
 
@@ -444,12 +492,12 @@ def inventar_verkaufen():
             print("Nicht genügend Gegenstände.")
             continue
 
-        muenzwerte()
+        geld.muenzwerte()
         preis = eingabe_int("Preis pro Stück in Kupfer: \nPreis: ")
 
         erlös = preis * anzahl
 
-        geld_hinzufügen(erlös)
+        geld.hinzufügen(erlös)
 
         items[name]["menge"] -= anzahl
 
@@ -531,34 +579,6 @@ def testbereich():
 
 
 #----Mechaniken----
-
-
-#Geldsystem: 1 Platin = 10 Gold = 100 Silber = 1000 Kupfer
-def geld_anzeigen():
-    kupfer = charakter["inventar"]["geld"]["copper"]
-
-    platin = kupfer // 1000
-    kupfer %= 1000
-
-    gold = kupfer // 100
-    kupfer %= 100
-
-    silber = kupfer // 10
-    kupfer %= 10
-
-    print(f"Platin: {platin}")
-    print(f"Gold: {gold}")
-    print(f"Silber: {silber}")
-    print(f"Kupfer: {kupfer}")
-
-def geld_hinzufügen(kupfer=0):
-    charakter["inventar"]["geld"]["copper"] += kupfer
-
-def geld_ausgeben(kupfer=0):
-    if charakter["inventar"]["geld"]["copper"] >= kupfer:
-        charakter["inventar"]["geld"]["copper"] -= kupfer
-    else:
-        print("Du hast nicht genug Geld!")
 
 #Proficiency Bonus basierend auf Level
 
@@ -703,191 +723,23 @@ def passive_perception():
 #----Charakterdaten----
 
 
-charakter = {
-                #----Charakterbogen allgemein----
-                    #Name
-                    #Klasse
-                    #Subklasse
-                    #Hintergrund
-                    #Glauben
-                    #Level
-                    #XP
-                    #Rasse
-                    #Grösse
-    "allgemein" : {"name" : "chiro",
-                          "klasse" : "barde",
-                          "subklasse" : "keine",
-                          "hintergrund" : "scharlatan", 
-                          "alignment" : "chaotisch neutral", 
-                          "level" : 1, 
-                          "xp" : 0, 
-                          "rasse" : "halbling (leichtfuß)",
-                          "grösse" : 75},
-                #----Attributes----
-                    #Strength
-                    #Dexterity
-                    #Constitution
-                    #Intelligence
-                    #Wisdom
-                    #Charisma
-
-#Attributswerte
-
-    "attribute" : {
-                    "str" : {"wert" : 8, 
-                            "save_proficient" : False},
-                    "dex" : {"wert" : 16, 
-                            "save_proficient" : True},
-                    "con" : {"wert" : 13, 
-                            "save_proficient" : False},                            
-                            "int" : {"wert" : 11,
-                            "save_proficient" : False},
-                    "wis" : {"wert" : 11, 
-                             "save_proficient" : False},
-                    "cha" : {"wert" : 17,
-                             "save_proficient" : True}},
-
-#----Skills----
-
-    "skills" : {"athletics" : 
-                    {"attribut" : "str",
-                    "proficient" : False,
-                    "expertise" : False},
-
-                "acrobatics" : 
-                    {"attribut" : "dex",
-                    "proficient" : False,
-                    "expertise" : False},
-                "sleight_of_hand" : 
-                    {"attribut" : "dex",
-                    "proficient" : True,
-                    "expertise" : False},
-                "stealth" : 
-                    {"attribut" : "dex",
-                    "proficient" : False,
-                    "expertise" : False},
-
-                "arcana" : 
-                    {"attribut" : "int",
-                     "proficient" : False,
-                     "expertise" : False},
-                "history" :
-                    {"attribut" : "int",
-                     "proficient" : False,
-                     "expertise" : False},
-                "investigation" :
-                    {"attribut" : "int",
-                     "proficient" : False,
-                     "expertise" : False},
-                "nature" :
-                    {"attribut" : "int",
-                     "proficient" : False,
-                     "expertise" : False},
-                "religion" : 
-                    {"attribut" : "int",
-                     "proficient" : False,
-                     "expertise" : False},
-
-                "animal_handling" :
-                    {"attribut" : "wis",
-                     "proficient" : False,
-                     "expertise" : False},
-                "insight" :
-                    {"attribut" : "wis",
-                     "proficient" : False,
-                     "expertise" : False},
-                "medicine" :
-                    {"attribut" : "wis",
-                     "proficient" : False,
-                     "expertise" : False},
-                "perception" : 
-                    {"attribut" : "wis",
-                     "proficient" : True,
-                     "expertise" : False},
-                "survival" : 
-                    {"attribut" : "wis",
-                     "proficient" : False,
-                     "expertise" : False},
-
-                "deception" :
-                    {"attribut" : "cha",
-                     "proficient" : True,
-                     "expertise" : False},
-                "intimidation" : 
-                    {"attribut" : "cha",
-                     "proficient" : False,
-                     "expertise" : False},
-                "performance" : 
-                    {"attribut" : "cha",
-                     "proficient" : True,
-                     "expertise" : True},
-                "persuasion" : 
-                    {"attribut" : "cha",
-                     "proficient" : True,
-                     "expertise" : True}},
-
-
-#-Inventar-
-    "inventar" : {
-        "items": {
-            "rapier" : {"menge" : 1,
-                        "typ" : "Waffe",
-                        "schaden" : {"anzahl" : 1, 
-                                     "seiten" : 8},
-                        "attribut" : "dex",
-                        "schadenstyp" : "stich",},
-            "diplomatenpack" : {"menge" : 1,
-                                "typ" : "container",
-                                "inhalt" : 
-                                    {"Parfüm" : 1, 
-                                    "Truhe" : 1,
-                                    "Schriftrollenbehäler" : 2,   
-                                    "Feine Kleidung" : 1,
-                                    "Tintenfass" : 1,
-                                    "Feder" : 1,
-                                    "Lampe" : 1,
-                                    "Ölflasche" : 1,
-                                    "Blatt Papier" : 1,
-                                    "Siegelwachs" : 1,
-                                    "Seife" : 1}},
-
-            "fälscherausrüstung" : {"menge" : 1,
-                                    "typ" : "container",
-                                    "inhalt" : 
-                                        {"Werkzeug zum Fälschen von Dokumenten\n" : 1,
-                                         "Werkzeug zum Fälschen von Siegeln\n" : 1,
-                                         "Werkzeug zum Fälschen von Unterschriften\n" : 1}},
-            "verkleidungsausrüstung" : {"menge" : 1,
-                                        "typ" : "container",
-                                        "inhalt" : 
-                                            {"Kostüm\n" : 1,
-                                             "Perücke\n" : 1,
-                                             "Make-up\n" : 1}},
-            "flöte" :   {"menge" : 1,
-                        "typ" : "Instrument",
-                        "effekt" : "\tEine einfache Flöte, die du spielen kannst, um \n"
-                        "\tdeine musikalischen Fähigkeiten zu zeigen."},
-            "dolch" :   {"menge" : 1,
-                        "typ" : "Waffe",
-                        "schaden" : {"anzahl" : 1, 
-                                     "seiten" : 4},
-                        "attribut" : "dex",
-                        "schadenstyp" : "stich",},
-            "lederrüstung" : {"menge" : 1,
-                              "typ" : "rüstung",
-                              "rüstungswert" : 11,
-                              "effekt" : "\tEine leichte Lederrüstung"},},
-        "geld" : {"copper" : 1_500},}
-}
-
-
-laden(name=charakter["allgemein"]["name"])
-
 if __name__ == "__main__":
-    charaktermenue()
+    print("Gib den Namen deines Charakters ein:")
+    try:
+        name = eingabe_str("\nName:> ").lower()
 
+    except FileNotFoundError:
+        print("Charakter nicht gefunden. Bitte versuche es erneut.")
+        name = eingabe_str("\nName:> ").lower()
+    charakter = laden(name)
 
+geld = Geld(charakter["inventar"]["geld"])
+
+charaktermenue()
 speichern(charakter["allgemein"]["name"])
+
+
+
 
 
 #-Kampf-

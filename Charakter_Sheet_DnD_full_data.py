@@ -883,7 +883,6 @@ charakter = {
         "geld" : {"copper" : 1_500},}
 }
 
-
 charakter = laden(charakter["allgemein"]["name"])
 
 if __name__ == "__main__":
